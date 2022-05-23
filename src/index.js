@@ -1,3 +1,5 @@
+import { rootReducer } from "./redux/rootReducer";
+import { createStore } from "./store";
 import "./styles.css";
 
 // DOM
@@ -8,33 +10,31 @@ const async = document.getElementById("async");
 const theme = document.getElementById("theme");
 // ==
 
-let state = 0;
+const store = createStore(rootReducer, 0);
 
 // APP
-const render = () => {
-    counter.textContent = state;
-};
-
 add.addEventListener("click", () => {
-    state++;
-    render();
+    store.dispatch({ type: "INCREMENT" });
 });
 
 sub.addEventListener("click", () => {
-    state--;
-    render();
+    store.dispatch({ type: "DECRIMENT" });
 });
 
 async.addEventListener("click", () => {
     setTimeout(() => {
-        state++;
-        render();
+        store.dispatch({ type: "INCREMENT" });
     }, 2000);
 });
+
+store.subscribe(() => {
+    let state = store.getState();
+    counter.textContent = state;
+});
+
+store.dispatch({ type: "INIT" });
 
 theme.addEventListener("click", () => {
     document.body.classList.toggle("dark");
 });
 // ==
-
-render();
